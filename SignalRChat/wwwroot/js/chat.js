@@ -5,10 +5,10 @@ var connection = new signalR.HubConnectionBuilder().withUrl("chatHub").build();
 // Disable the send button until connection is established.
 document.getElementById('sendButton').disabled = true;
 
-connection.on('ReceiveMessage', function (user, message) {
+connection.on('ReceivePrivateMessage', function (message) {
     var li = document.createElement('li');
     document.getElementById("messagesList").appendChild(li);    
-    li.textContent = `${user} says ${message}`;
+    li.textContent = `${message}`;
 });
 
 connection.start().then(function () {
@@ -18,9 +18,9 @@ connection.start().then(function () {
 });
 
 document.getElementById('sendButton').addEventListener('click', function (event) {
-    var user = document.getElementById('userInput').value;
-    var message = document.getElementById('messageInput').value;
-    connection.invoke("SendMessage", user, message).catch(function (err) {
+    var user = document.getElementById('To').value;
+    var message = document.getElementById('Message').value;
+    connection.invoke("SendPrivateMessage", user, message).catch(function (err) {
         return console.error(err.toString());
     });
     event.preventDefault();

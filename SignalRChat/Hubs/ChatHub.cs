@@ -1,29 +1,25 @@
 ﻿using Microsoft.AspNetCore.SignalR;
+using Microsoft.EntityFrameworkCore;
+using SignalRChat.Data;
+using System.Security.Claims;
+using System.Security.Principal;
 
 namespace SignalRChat.Hubs
 {
     public class ChatHub : Hub
     {
-        /// <summary>
-        /// 全体にメッセージを送信する
-        /// </summary>
-        /// <param name="user"></param>
-        /// <param name="message"></param>
-        /// <returns></returns>
-        public async Task SendMessage(string user, string message)
-        {
-        }
-
+        
         /// <summary>
         /// 特定の相手にメッセージを送信する
         /// </summary>
         /// <param name="user"></param>
         /// <param name="message"></param>
-        /// <returns></returns>
-        public Task SendPrivateMessage(string userID, string message)
-        {
-            return Clients.User(userID).SendAsync("ReceiveMessage", message);
-        }        
+        /// <returns></returns>        
+        public async Task SendPrivateMessage(string user, string message)
+        {                       
+            await Clients.User(user).SendAsync("ReceivePrivateMessage",
+                                               $"{Context.UserIdentifier}: {message}");
+        }
 
         /// <summary>
         /// グループに所属するメンバーにメッセージを送る

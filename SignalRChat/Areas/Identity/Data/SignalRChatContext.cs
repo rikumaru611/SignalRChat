@@ -6,6 +6,10 @@ namespace SignalRChat.Data;
 
 public class SignalRChatContext : IdentityDbContext<IdentityUser>
 {
+    public SignalRChatContext()
+        : base()
+    {
+    }
     public SignalRChatContext(DbContextOptions<SignalRChatContext> options)
         : base(options)
     {

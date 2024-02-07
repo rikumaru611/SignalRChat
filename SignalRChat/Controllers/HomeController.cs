@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using SignalRChat.Data;
 using SignalRChat.Models;
 using System.Diagnostics;
 
@@ -7,14 +8,18 @@ namespace SignalRChat.Controllers
     public class HomeController : Controller
     {
         private readonly ILogger<HomeController> _logger;
+        private readonly SignalRChatContext _db;
 
-        public HomeController(ILogger<HomeController> logger)
+
+        public HomeController(ILogger<HomeController> logger, SignalRChatContext db)
         {
             _logger = logger;
+            _db = db;
         }
 
         public IActionResult Index()
         {
+            var User = _db.Users.Where(u => u.UserName == "user2@user2.user2"); 
             return View();
         }
 
