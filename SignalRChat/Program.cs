@@ -1,11 +1,25 @@
 using SignalRChat.Hubs;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
+using SignalRChat.Data;
+using Microsoft.AspNetCore.SignalR;
+using SignalRChat;
 
 var builder = WebApplication.CreateBuilder(args);
+var connectionString = builder.Configuration.GetConnectionString("SignalRChatContextConnection") ?? throw new InvalidOperationException("Connection string 'SignalRChatContextConnection' not found.");
+
+builder.Services.AddDbContext<SignalRChatContext>(options =>
+    options.UseSqlServer(connectionString));
+
+builder.Services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = true)
+    .AddEntityFrameworkStores<SignalRChatContext>();
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
 builder.Services.AddRazorPages();
 builder.Services.AddSignalR();
+
+builder.Services.AddSingleton<IUserIdProvider, EmailBasedUserIdProvider>();
 
 var app = builder.Build();
 
@@ -21,6 +35,7 @@ app.UseHttpsRedirection();
 app.UseStaticFiles();
 
 app.UseRouting();
+app.UseAuthentication();;
 
 app.UseAuthorization();
 
